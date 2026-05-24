@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Ujian Siswa</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+    body { background-color: #0583D2; overflow-x: hidden; }
+    h1 { margin-bottom: 8%; text-align: center; font-family: "Fredoka One", cursive; color: #0583D2; letter-spacing: 0.05em; }
+    input, button { padding: 3%; width: 100%; margin-bottom: 5%; border: 1px solid #ccc; border-radius: 4px; outline: none; }
+    input:last-of-type { margin-bottom: 0; }
+    .login-container { background-color: white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); width: 80%; max-width: 400px; margin-left: auto; margin-right: auto; margin-top: 15vh; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 30px 0; }
+    #main { width: 85%; }
+    button.primary-btn { background-color: #0583D2; color: white; border: none; margin-top: 8%; border-radius: 4px; font-weight: bold; font-size: 16px; padding: 15px;}
+    button.primary-btn:hover { cursor: pointer; opacity: 0.8; transition: 0.3s; }
+    .center-content { display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; }
+    h2 { color: whitesmoke; font-family: "Fredoka One", cursive; }
+    .hidden { display: none !important; }
+    .student-icon { text-align: center; font-size: 50px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <div class="center-content" id="loading">
+    <h2>Menyiapkan Sistem...</h2>
+  </div>
+
+  <div id="app_content" class="hidden">
+    <div class="login-container">
+      <div id="main">
+        <div class="student-icon">📝</div>
+        <h1>Portal Ujian</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 20px; font-size: 14px;">Masukkan data ujian Anda.</p>
+        
+        <input id="siswa_school_id" type="text" placeholder="ID Sekolah (Cth: 12345678)">
+        <input id="siswa_username" type="text" placeholder="Username Siswa">
+        <input id="siswa_password" type="password" placeholder="Password Siswa">
+        
+        <button id="login_siswa_btn" class="primary-btn">Mulai Ujian</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // MASUKKAN LINK DEPLOY GOOGLE APPS SCRIPT ANDA DI SINI
+    const API_URL = "https://script.google.com/macros/s/AKfycbxbx3JC-JoXEvcOomPgYgKtWy3qkAGCn8M1MDnzMfoBXZ65ewIcj-3q_TaXD2jw2ni-fQ/exec"; 
+
+    window.addEventListener("load", function() {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('app_content').classList.remove('hidden');
+    });
+
+    // Fungsi Fetch ke Google Apps Script API
+    async function apiRequest(payload) {
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload), // Dikirim sebagai text plain (menghindari block CORS preflight)
+        });
+        return await response.json();
+      } catch (error) {
+        throw new Error("Gagal terhubung ke server.");
+      }
+    }
+
+    document.getElementById('login_siswa_btn').addEventListener('click', async function() {
+      const btn = this;
+      const schoolId = document.getElementById('siswa_school_id').value.trim();
+      const username = document.getElementById('siswa_username').value.trim();
+      const password = document.getElementById('siswa_password').value.trim();
+      
+      if(!schoolId || !username || !password) return alert("Wajib diisi semua!");
+      
+      btn.disabled = true; btn.textContent = "Mencari Ujian...";
+      
+      try {
+        // Panggil API dengan action 'loginSiswa'
+        const result = await apiRequest({
+          action: "loginSiswa",
+          schoolId: schoolId,
+          username: username,
+          password: password
+        });
+
+        if (result.status === "success") {
+          alert("Login berhasil!");
+          window.location.href = result.data; // Redirect ke Google Form
+        } else {
+          alert(result.message); // Pesan error dari Apps Script
+          btn.disabled = false; btn.textContent = "Mulai Ujian";
+        }
+      } catch (err) {
+        alert(err.message);
+        btn.disabled = false; btn.textContent = "Mulai Ujian";
+      }
+    });
+  </script>
+</body>
+</html>
