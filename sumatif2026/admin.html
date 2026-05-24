@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Admin</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+    body { background-color: #0583D2; overflow-x: hidden; }
+    h1 { margin-bottom: 8%; text-align: center; font-family: "Fredoka One", cursive; color: #0583D2; letter-spacing: 0.05em; }
+    h2 { color: whitesmoke; font-family: "Fredoka One", cursive; }
+    h5 { color: #333; margin-top: 10px; margin-bottom: 5px; text-align: left; font-weight: 600; }
+    input, select, button { padding: 3%; width: 100%; margin-bottom: 3%; border: 1px solid #ccc; border-radius: 4px; outline: none; }
+    #bottom { display: flex; align-items: center; justify-content: center; margin-top: 10px; }
+    .bot_link { color: #000; padding: 5%; text-decoration: none; }
+    .bot_link:hover { text-decoration: underline; }
+    .login-container { background-color: white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); width: 70%; max-width: 500px; margin-left: auto; margin-right: auto; margin-top: 8vh; height: 85vh; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; overflow-y: auto; padding: 20px 0; }
+    #main, #main_signup, #main_form { width: 80%; padding-bottom: 20px; }
+    button.primary-btn { background-color: #0583D2; color: white; border: none; margin-top: 5%; border-radius: 4px; font-weight: bold; }
+    button.primary-btn:hover { cursor: pointer; opacity: 0.8; transition: 0.3s; }
+    .return-btn { background: none; color: grey; text-decoration: underline; border: none; margin-top: 15px; padding: 0; cursor: pointer; }
+    .menu-container { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; min-height: 100vh; padding: 40px 20px; gap: 20px; }
+    .menu-item { background-color: #ffffff; padding: 30px 20px; text-align: center; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 12px; transition: transform 0.3s ease; width: 220px; cursor: pointer; }
+    .menu-emoji { font-size: 60px; margin-bottom: 15px; }
+    .menu-title { font-size: 20px; color: #333; margin: 0; font-weight: bold; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+    .menu-description { font-size: 14px; color: #666; margin-top: 15px; }
+    .hidden { display: none !important; }
+    .center-content { display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; }
+    .admin-badge { background: #ff4757; color: white; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 15px; display: inline-block; }
+  </style>
+</head>
+
+<body>
+  <div class="center-content" id="loading"><h2>Loading...</h2></div>
+
+  <div id="app_content" class="hidden">
+    <!-- LOGIN PAGE ADMIN -->
+    <div class="login-container" id="login-container">
+      <div id="main" style="text-align: center;">
+        <span class="admin-badge">PORTAL ADMIN</span>
+        <h1 style="margin-bottom: 5%;">Login Admin</h1>
+        <input id="email" type="email" placeholder="Email">
+        <input id="password" type="password" placeholder="Password">
+        <button id="submit" class="primary-btn">Log In</button>
+        <div id="bottom"><a href="#" id="forgot_btn" class="bot_link">Lupa password?</a><a href="#" id="crt_btn" class="bot_link">Buat akun baru</a></div>
+      </div>
+    </div>
+
+    <!-- SIGNUP PAGE -->
+    <div class="login-container hidden" id="signup_container">
+      <div id="main_signup">
+        <h1>Buat akun Admin</h1>
+        <input id="email_crt" type="email" placeholder="Email">
+        <input id="password_crt" type="password" placeholder="Password">
+        <button id="create-acct-btn" class="primary-btn">Buat akun</button>
+        <button class="return-btn" id="return_signup" style="width: 100%;">Kembali</button>
+      </div>
+    </div>
+
+    <!-- MAIN MENU PAGE -->
+    <div class="menu-container hidden" id="menu-container">
+      <div class="menu-item" id="student_menu"><div class="menu-emoji">👨‍🎓</div><p class="menu-title">Data Murid</p><p class="menu-description">Input data siswa.</p></div>
+      <div class="menu-item" id="exam_menu"><div class="menu-emoji">📝</div><p class="menu-title">Ujian</p><p class="menu-description">Buat jadwal ujian.</p></div>
+      <div class="menu-item" id="school_menu"><div class="menu-emoji">🏫</div><p class="menu-title">Sekolah</p><p class="menu-description">Atur profil sekolah.</p></div>
+      <div class="menu-item" id="settings_menu"><div class="menu-emoji">⚙️</div><p class="menu-title">Pengaturan</p><p class="menu-description">ID Sekolah & Database.</p></div>
+      <button class="return-btn" id="logout-btn" style="position: absolute; top: 20px; right: 20px; color: white;">Logout</button>
+    </div>
+
+    <!-- FORM DATA MURID -->
+    <div class="login-container hidden" id="form_student_container">
+      <div id="main_form">
+        <h1>Data Murid</h1>
+        <input id="murid_nama" type="text" placeholder="Nama Lengkap">
+        <input id="murid_kelas" type="text" placeholder="Kelas (Cth: X IPA 1)">
+        <input id="murid_username" type="text" placeholder="Username">
+        <input id="murid_password" type="text" placeholder="Password Siswa">
+        <h5>Role:</h5><input id="murid_role" type="text" value="Siswa" readonly style="background-color: #eee;">
+        <button id="save_student" class="primary-btn">Simpan Data Murid</button>
+        <button class="return-btn back-to-menu" style="width: 100%;">Kembali ke Menu</button>
+      </div>
+    </div>
+
+    <!-- FORM SEKOLAH -->
+    <div class="login-container hidden" id="form_school_container">
+      <div id="main_form">
+        <h1>Profil Sekolah</h1>
+        <input id="sekolah_nama" type="text" placeholder="Nama Sekolah Lengkap">
+        <input id="sekolah_logo" type="text" placeholder="URL Logo Sekolah">
+        <button id="save_school" class="primary-btn">Simpan Profil</button>
+        <button class="return-btn back-to-menu" style="width: 100%;">Kembali ke Menu</button>
+      </div>
+    </div>
+
+    <!-- FORM UJIAN -->
+    <div class="login-container hidden" id="form_exam_container">
+      <div id="main_form">
+        <h1>Jadwal Ujian</h1>
+        <input id="ujian_nama" type="text" placeholder="Nama Test">
+        <input id="ujian_kelas" type="text" placeholder="Untuk Kelas">
+        <h5>Tanggal:</h5><input id="ujian_tanggal" type="date">
+        <h5>Waktu:</h5><input id="ujian_waktu" type="time">
+        <input id="ujian_durasi" type="number" placeholder="Durasi (Menit)">
+        <input id="ujian_url" type="url" placeholder="URL GForm">
+        <h5>Status:</h5><select id="ujian_status"><option value="Aktif">Aktif</option><option value="Nonaktif">Nonaktif</option></select>
+        <button id="save_exam" class="primary-btn">Simpan Ujian</button>
+        <button class="return-btn back-to-menu" style="width: 100%;">Kembali ke Menu</button>
+      </div>
+    </div>
+
+    <!-- PENGATURAN -->
+    <div class="login-container hidden" id="settings_container">
+      <div id="main_form">
+        <h1>Database</h1>
+        <h5>ID Sekolah</h5><input id="school_id" type="text" readonly style="background-color: #eee; font-weight:bold; font-size: 20px;">
+        <button class="return-btn back-to-menu" style="width: 100%;">Kembali ke Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // MASUKKAN LINK DEPLOY GOOGLE APPS SCRIPT ANDA DI SINI
+    const API_URL = "https://script.google.com/macros/s/AKfycbxbx3JC-JoXEvcOomPgYgKtWy3qkAGCn8M1MDnzMfoBXZ65ewIcj-3q_TaXD2jw2ni-fQ/exec";
+
+    let currentSchoolId = "";
+
+    async function apiRequest(payload) {
+      const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+      return await response.json();
+    }
+
+    function switchView(hideEl, showEl) { hideEl.classList.add('hidden'); showEl.classList.remove('hidden'); }
+
+    window.addEventListener("load", function() {
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('app_content').classList.remove('hidden');
+    });
+
+    const views = { login: document.getElementById('login-container'), signup: document.getElementById('signup_container'), menu: document.getElementById('menu-container'), studentForm: document.getElementById('form_student_container'), schoolForm: document.getElementById('form_school_container'), examForm: document.getElementById('form_exam_container'), settings: document.getElementById("settings_container") };
+
+    document.getElementById('crt_btn').onclick = (e) => { e.preventDefault(); switchView(views.login, views.signup); };
+    document.getElementById('return_signup').onclick = () => switchView(views.signup, views.login);
+    document.getElementById('logout-btn').onclick = () => { localStorage.removeItem('school_id'); switchView(views.menu, views.login); };
+    document.getElementById('student_menu').onclick = () => switchView(views.menu, views.studentForm);
+    document.getElementById('school_menu').onclick = () => switchView(views.menu, views.schoolForm);
+    document.getElementById('exam_menu').onclick = () => switchView(views.menu, views.examForm);
+    document.getElementById('settings_menu').onclick = () => switchView(views.menu, views.settings);
+    document.querySelectorAll('.back-to-menu').forEach(btn => { btn.onclick = function() { switchView(this.closest('.login-container'), views.menu); }; });
+
+    // LOGIN ADMIN
+    document.getElementById('submit').addEventListener('click', async function() {
+      const btn = this; const email = document.getElementById('email').value.trim(); const password = document.getElementById('password').value.trim();
+      if (!email || !password) return alert("Harap isi semua!");
+      btn.disabled = true; btn.textContent = "Loading...";
+      try {
+        const result = await apiRequest({ action: "loginAdmin", email, password });
+        if(result.status === "success") {
+          currentSchoolId = result.data.school_id;
+          document.getElementById('school_id').value = currentSchoolId;
+          alert("Login Berhasil!"); switchView(views.login, views.menu);
+        } else { alert(result.message); }
+      } catch (e) { alert(e.message); }
+      btn.disabled = false; btn.textContent = "Log In";
+    });
+
+    // REGISTER ADMIN
+    document.getElementById('create-acct-btn').addEventListener('click', async function() {
+      const btn = this; const email = document.getElementById('email_crt').value.trim(); const password = document.getElementById('password_crt').value.trim();
+      if (!email || !password) return alert("Harap isi semua!");
+      btn.disabled = true; btn.textContent = "Membuat...";
+      try {
+        const result = await apiRequest({ action: "registerAdmin", email, password });
+        if(result.status === "success") { alert(result.data); switchView(views.signup, views.login); } else { alert(result.message); }
+      } catch (e) { alert(e.message); }
+      btn.disabled = false; btn.textContent = "Buat akun";
+    });
+
+    // SAVE MURID
+    document.getElementById('save_student').addEventListener('click', async function() {
+      const btn = this; const data = { nama: document.getElementById('murid_nama').value, kelas: document.getElementById('murid_kelas').value, username: document.getElementById('murid_username').value, password: document.getElementById('murid_password').value, role: "Siswa" };
+      btn.disabled = true; btn.textContent = "Menyimpan...";
+      try {
+        const result = await apiRequest({ action: "saveStudent", schoolId: currentSchoolId, data });
+        if(result.status === "success") { alert(result.data); switchView(views.studentForm, views.menu); } else { alert(result.message); }
+      } catch (e) { alert(e.message); }
+      btn.disabled = false; btn.textContent = "Simpan Data Murid";
+    });
+
+    // SAVE SEKOLAH
+    document.getElementById('save_school').addEventListener('click', async function() {
+      const btn = this; const data = { namaSekolah: document.getElementById('sekolah_nama').value, logoSekolah: document.getElementById('sekolah_logo').value };
+      btn.disabled = true; btn.textContent = "Menyimpan...";
+      try {
+        const result = await apiRequest({ action: "saveSchool", schoolId: currentSchoolId, data });
+        if(result.status === "success") { alert(result.data); switchView(views.schoolForm, views.menu); } else { alert(result.message); }
+      } catch (e) { alert(e.message); }
+      btn.disabled = false; btn.textContent = "Simpan Profil";
+    });
+
+    // SAVE EXAM
+    document.getElementById('save_exam').addEventListener('click', async function() {
+      const btn = this; const data = { namaTest: document.getElementById('ujian_nama').value, kelas: document.getElementById('ujian_kelas').value, tanggal: document.getElementById('ujian_tanggal').value, waktu: document.getElementById('ujian_waktu').value, durasi: document.getElementById('ujian_durasi').value, urlForm: document.getElementById('ujian_url').value, status: document.getElementById('ujian_status').value };
+      btn.disabled = true; btn.textContent = "Menyimpan...";
+      try {
+        const result = await apiRequest({ action: "saveExam", schoolId: currentSchoolId, data });
+        if(result.status === "success") { alert(result.data); switchView(views.examForm, views.menu); } else { alert(result.message); }
+      } catch (e) { alert(e.message); }
+      btn.disabled = false; btn.textContent = "Simpan Ujian";
+    });
+  </script>
+</body>
+</html>
